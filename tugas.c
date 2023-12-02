@@ -19,17 +19,19 @@ int main()
     printf("%-22s %-22s %-22s %-22s %-22s\n", "No. Artikel", "Nama", "Harga", "Jumlah", "Sub.Total");
     printf("----------------------------------------------------------------------------------------------------------------\n");
 
+    nama_baju();
+
     for (int i=0; i < jumlah_pembelian; i++)
     {
-        scanf("%[^:]:%d:%d", &tipe_penj, &tipe_k, &nom);
+        scanf("%[^:]:%[0]d:%[0]d", &tipe_penj, &tipe_k, &nom);
+        printf("%s %d %d", tipe_penj, tipe_k, nom);
     }
-
 
     
     //lanjutan dari nota (pembelian, bayar, dll)
 
     //Nama baju, return nama
-    char* nama_baju ()
+    char nama_baju ()
     {
 
     }
