@@ -5,11 +5,13 @@
 char* tipe(char tipe_penj[]);
 char *jenis_baju(char jenis[]);
 int harga_baju(char tipe[], char nama[]);
+int diskon_func(char diskon);
 
 int main()
 {   
     char nama[50], tipe_penj[3], jenis[3], nom[7], kode_pemb[13];
-    int  nota, banyak, jumlah_baju, jumlah_bayar, total;
+    int  nota, banyak, jumlah_baju, jumlah_bayar, total, diskon;
+    char event;
     jumlah_bayar = 0;
 
     // Pengulangan sesai pembelian baju
@@ -80,6 +82,9 @@ int main()
         fflush(stdout);
     }
     printf("%d", total);
+    scanf("%c", event);
+    diskon = diskon_func(event);
+    pritnf("%d", diskon);
 
 }
 
@@ -134,7 +139,10 @@ int harga_baju(char tipe[], char nama[])
 }
 
 //Diskon baju, return diskon
-int diskon()
+int diskon_func(char diskon)
 {
-
+    if
+    {
+        return ;
+    }
 }
