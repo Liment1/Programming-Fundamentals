@@ -9,11 +9,11 @@ int harga_baju(char tipe[], char nama[]);
 int main()
 {   
     char nama[50], tipe_penj[3], jenis[3], nom[7], kode_pemb[15];
-    int  nota, banyak, jumlah;
-    jumlah = 0;
+    int  nota, banyak, jumlah_baju, jumlah_bayar, total;
+    jumlah_bayar = 0;
 
     // Pengulangan sesai pembelian baju
-    printf("Jumlah Pembelian Baju : ");
+    printf("banyak pembelian Baju : ");
     scanf("%d", &banyak);
     printf("\n");
 
@@ -30,13 +30,14 @@ int main()
     // }
 
     printf("----------------------------------------------------------------------------------------------------------------\n");
-    printf("%-22s %-22s %-22s %-22s %-22s\n", "No. Artikel", "Nama", "Harga", "Jumlah", "Sub.Total");
+    printf("%-22s %-22s %-22s %-22s %-22s\n", "No. Artikel", "Nama", "Harga", "jumlah_bayar", "Sub.Total");
     printf("----------------------------------------------------------------------------------------------------------------    \n");
 
     for (int i=0; i < banyak; i++)
     {
-        scanf("%[^:]:%[^:]:%s", tipe_penj, jenis, nom);
+        scanf("%[^:]:%[^:]:%[^\n] ", tipe_penj, jenis, nom);
         getchar();
+        scanf("%d", &jumlah_baju);
 
 
         // fgets(kode_pemb, 13 ,stdin);
@@ -47,9 +48,11 @@ int main()
         char *tipe_baju = tipe(tipe_penj);
         char *nama_baju = jenis_baju(jenis);
         int harga = harga_baju(tipe_baju, nama_baju);
-        jumlah += harga;
 
-        printf("%s %s %d %d\n", tipe_baju, nama_baju, harga, jumlah);
+        jumlah_bayar = harga*jumlah_baju;
+        total = jumlah_bayar;
+
+        printf("%s Kemeja %s %d %d %d\n", tipe_baju, nama_baju, harga, jumlah_bayar, total);
     }
 
 
@@ -86,7 +89,7 @@ char *jenis_baju(char jenis[])
         return  "P";
     }
 }
-//AQWD
+
 //Harga baju, return harga
 int harga_baju(char tipe[], char nama[])
 {
