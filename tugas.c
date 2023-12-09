@@ -19,14 +19,14 @@ int main()
     char event;
 
     // Pengulangan sesai pembelian baju
-    printf("-- INPUT USER --\n");
+    printf("   -- INPUT USER --\n");
     printf("banyak pembelian Baju : ");
     scanf("%d", &banyak);
     getchar();
     printf("\n");
 
     char kode_arr[banyak][15], nama_arr[banyak][20], tipe_penj_arr[banyak][15];
-    int harga_arr[banyak], jumlah_arr[banyak];
+    int harga_arr[banyak], jumlah_arr[banyak], banyak_baju_arr[banyak];
 
     //loop sesuai kemauan user
     for (int i=0; i < banyak; i++)
@@ -45,6 +45,7 @@ int main()
         scanf("%d", &jumlah_baju); 
         getchar();
         printf("\n");
+        banyak_baju_arr[i] = jumlah_baju;
 
         //function tipe, nama, harga, jumlah, total
         char *tipe_baju = tipe(tipe_penj);
@@ -78,7 +79,7 @@ int main()
     //lanjutan dari nota (pembelian, bayar, dll)
     for (int i = 0; i < banyak; i++)
     {
-        printf("%-20s Kemeja %-21s Rp. %-28d %-20d Rp. %6d\n", kode_arr[i], strcat(tipe_penj_arr[i], nama_arr[i]), harga_arr[i], jumlah_baju, jumlah_arr[i]);
+        printf("%-20s Kemeja %-21s Rp. %-28d %-20d Rp. %6d\n", kode_arr[i], strcat(tipe_penj_arr[i], nama_arr[i]), harga_arr[i], banyak_baju_arr[i], jumlah_arr[i]);
     }
     printf("%103s Rp. %6d\n", "", total);
 
