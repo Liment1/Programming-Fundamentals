@@ -1,20 +1,25 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
+#include <math.h>
 
+//prototype
 char* tipe(char tipe_penj[]);
 char *jenis_baju(char jenis[]);
 int harga_baju(char tipe[], char nama[]);
-int diskon_func(char diskon);
+float diskon_func(char diskon);
+const char* convert(int inp, int length, int currlen);
+
+//buat konversi ke kata
+char currstr[1000];
 
 int main()
 {   
     char nama[50], tipe_penj[3], jenis[3], nom[7], kode_pemb[13];
-    int  nota, banyak, jumlah_baju, jumlah_bayar, total, diskon;
+    int  nota, banyak, jumlah_baju, jumlah_bayar = 0, total = 0, bayar;
     char event;
-    jumlah_bayar = 0;
 
     // Pengulangan sesai pembelian baju
+    printf("-- INPUT USER --\n");
     printf("banyak pembelian Baju : ");
     scanf("%d", &banyak);
     getchar();
@@ -27,7 +32,8 @@ int main()
     for (int i=0; i < banyak; i++)
     {
         //input user
-        printf("kode %d:  ", i+1);
+        printf("Pembelian ke %d\n", i+1);
+        printf("kode %d\t\t: ", i+1);
         fgets(kode_pemb, 13, stdin); 
         char* ptr = strchr(kode_pemb, '\n'); 
         if (ptr) { 
@@ -35,9 +41,10 @@ int main()
         } 
         
         sscanf(kode_pemb, "%[^:]:%[^:]:%s", tipe_penj, jenis, nom);
-        printf("Banyak baju : ");
+        printf("Banyak baju\t: ");
         scanf("%d", &jumlah_baju); 
         getchar();
+        printf("\n");
 
         //function tipe, nama, harga, jumlah, total
         char *tipe_baju = tipe(tipe_penj);
@@ -53,12 +60,10 @@ int main()
         strcpy(nama_arr[i], nama_baju);
         harga_arr[i] = harga;
         jumlah_arr[i] = jumlah_bayar;
-
-        // printf("%s %s %s %d %d\n", kode_arr[i], tipe_penj_arr[i], nama_arr[i], harga_arr[i], jumlah_arr[i]);
-        // printf("%s Kemeja %s %d %d %d\n\n", tipe_baju, nama_baju, harga, jumlah_bayar, total);
     }
 
     // Template nota dan input
+    printf("%64s", "STRUK PEMBELIAN\n");
     printf("No. Nota\t: ");
     scanf("%d", &nota);
     getchar();
@@ -66,26 +71,55 @@ int main()
     scanf("%s", &nama);
     getchar();
 
-    // for (int i = 0; i < 3; i++)
-    // {
-    //     printf("%d ", nama[i]); 
-    // }
+    printf("---------------------------------------------------------------------------------------------------------------------\n");
+    printf("%-25s %-25s %-25s %-25s %-25s\n", "No. Artikel", "Nama", "Harga", "Jumlah_bayar", "Sub.Total");
+    printf("---------------------------------------------------------------------------------------------------------------------\n");
 
-    printf("----------------------------------------------------------------------------------------------------------------\n");
-    printf("%-25s %-25s %-25s %-25s %-25s\n", "No. Artikel", "Nama", "Harga", "jumlah_bayar", "Sub.Total");
-    printf("----------------------------------------------------------------------------------------------------------------    \n");
- 
     //lanjutan dari nota (pembelian, bayar, dll)
     for (int i = 0; i < banyak; i++)
     {
-        printf("%-22s Kemeja %s %s %d %-22d\n", kode_arr[i], tipe_penj_arr[i], nama_arr[i], harga_arr[i], jumlah_arr[i]);
-        fflush(stdout);
+        printf("%-20s Kemeja %-21s Rp. %-28d %-20d Rp. %6d\n", kode_arr[i], strcat(tipe_penj_arr[i], nama_arr[i]), harga_arr[i], jumlah_baju, jumlah_arr[i]);
     }
-    printf("%d", total);
-    scanf("%c", event);
-    diskon = diskon_func(event);
-    pritnf("%d", diskon);
+    printf("%103s Rp. %6d\n", "", total);
 
+    //Diskon dan Bayar
+    printf("---------------------------------------------------------------------------------------------------------------------\n");
+    printf("%-113s", "Event");
+    scanf("%c", &event);
+
+    //hitung harga diskon
+    float diskon = diskon_func(event);
+    //hitung harga setelah diskon
+    int harga_diskon = total - (total*diskon);
+    //pembayaran
+    printf("%-110s %2.0f%%\n", "Jumlah Diskon", diskon*100);
+    printf("%-103s Rp. %6d\n", "Total Belanja Setelah Diskon", harga_diskon);
+    printf("%-103s Rp. ", "Jumlah bayar"); 
+    scanf("%d", &bayar);
+    getchar();
+    
+    if (harga_diskon > bayar)
+    {
+        printf ("\nJumlah uang yang dimasukkan tidak mencukupi, harap ulangi proses pembelian dari awal.\n");
+    } 
+    else 
+    {
+        printf("%-103s Rp. %6d\n", "Uang kembali", bayar - harga_diskon);
+    }
+
+    //mengubah ke kata-kata
+    int num = bayar-harga_diskon;
+    int dupe = num;
+    int length = 0;
+
+    while (dupe != 0)
+    {
+        dupe /= 10;1;        
+        length++;
+    }
+
+    printf("%115s\n", convert(num, length, 1));
+    printf ("%70s","~ Terima kasih ~");
 }
 
 //Nama baju, return nama
@@ -95,11 +129,11 @@ char *tipe(char tipe_penj[])
 
     if (strcmp("KI", tipe_penj) == 0)
     {
-        return "Konsyasi";
+        return "Konsyasi ";
     }
     else if (strcmp("PS", tipe_penj) == 0)
     {
-        return "Putus";
+        return "Putus ";
     }
 }
 
@@ -120,29 +154,149 @@ char *jenis_baju(char jenis[])
 //Harga baju, return harga
 int harga_baju(char tipe[], char nama[])
 {
-    if (strcmp(tipe, "Konsyasi") == 0 && strcmp(nama, "LP") == 0)
+    if (strcmp(tipe, "Konsyasi ") == 0 && strcmp(nama, "LP") == 0)
     {
         return 50900;
     }
-    else if (strcmp(tipe, "Konsyasi") == 0 && strcmp(nama, "P") == 0)
+    else if (strcmp(tipe, "Konsyasi ") == 0 && strcmp(nama, "P") == 0)
     {
         return 40900;
     }
-    else if (strcmp(tipe, "Putus") == 0 && strcmp(nama, "LP") == 0)
+    else if (strcmp(tipe, "Putus ") == 0 && strcmp(nama, "LP") == 0)
     {
         return 60900;
     }
-    else if (strcmp(tipe, "Putus") == 0 && strcmp(nama, "P") == 0)
+    else if (strcmp(tipe, "Putus ") == 0 && strcmp(nama, "P") == 0)
     {
         return 55900;
     }
 }
 
 //Diskon baju, return diskon
-int diskon_func(char diskon)
+float diskon_func(char event)
 {
-    if
+    if (event == 'R')
     {
-        return ;
+        return 0.2;
+    }
+    else if (event == 'U')
+    {
+        return 0.15;
+    }
+    else if (event == 'G')
+    {
+        return 0.1;
+    }
+    else if (event == 'N')
+    {
+        return 0;
+    }
+    else
+    {
+        return 0;
     }
 }
+
+//mengubah angka menjadi kata-kata
+const char* convert(int inp, int length, int currlen)
+{
+    char digit[10][20] = {"", "satu ", "dua ", "tiga ", "empat ", "lima ", "enam ", "tujuh ", "delapan ", "sembilan "};
+    char thou[4][20] = {"", "ribu ", "juta ", "miliyar "};
+    char hun[3][20] = {"ratus ", "", "puluh "};
+    
+    //cari digit pertama
+    int power = pow(10, currlen-1);
+    int currinp = (inp / power) % 10;
+    int hundreds = currlen % 3;
+    int thousands = (currlen-1) / 3;
+    int puluh;
+    if (hundreds == 2)
+    {
+        puluh = inp % (int) pow(10, currlen);
+        puluh /= (int) pow(10, (currlen/3) * 3);
+    }
+    else if(hundreds == 1)
+    {
+        puluh = inp % (int) pow(10, currlen + 1);
+        puluh /= (int) pow(10, (currlen/3) * 3);
+    }
+    
+
+    //cek sepuluh dan seribu
+    if (length - currlen == 1 && puluh == 11 && hundreds ==1)
+    {
+        strcpy(currstr, "sebelas ");
+        strcat(currstr, thou[thousands]);
+        return currstr;
+    }
+    else if (length - currlen == 1 && puluh == 10 && hundreds ==1)
+    {
+        strcpy(currstr, "sepuluh ");
+        strcat(currstr, thou[thousands]);
+        return currstr;
+    }
+    //cek angka pertama
+    else if (currlen == length)
+    {
+        //cek seribu
+        if (currinp == 1 && currlen == 4)
+        {
+            strcat(currstr, "seribu");
+        }
+        else if (hundreds == 0 && currinp == 1)
+        {
+            strcat(currstr, "seratus ");
+        }
+        //apabila angka == 0, maka tidak ada yang jalan
+        else if (strlen(digit[currinp]) != 0)
+        {
+            strcpy(currstr, digit[currinp]);
+            strcat(currstr, hun[hundreds]);
+        }
+        //print ribu, juta, miliyar
+        if (currlen % 3 == 1 && !(currinp == 1 && currlen == 4))
+        {
+            strcat(currstr, thou[thousands]);
+        }
+        return currstr;
+    }
+
+    //recursioin
+    convert(inp, length, currlen + 1);
+
+    //sebelas dan sepuluh
+    if (hundreds == 1)
+    {
+        if (puluh == 11)
+        {
+            strcat(currstr, "sebelas ");
+            strcat(currstr, thou[thousands]);
+        }
+        else if (puluh == 10)
+        {
+            strcat(currstr, "sepuluh ");
+            strcat(currstr, thou[thousands]);
+        }
+    }
+    //seratus
+    else if (hundreds == 0 && currinp == 1)
+    {
+        strcat(currstr, "se");
+        strcat(currstr, hun[hundreds]);
+    }
+    //digit biasa
+    else if (strlen(digit[currinp]) !=0 && !(puluh == 11 || puluh == 10))
+    {
+        strcat(currstr, digit[currinp]);
+        strcat(currstr, hun[hundreds]);
+    }
+    
+    
+    //print ribu, juta, miliyar     
+    if (hundreds == 1 && !(puluh == 11 && puluh == 10))
+    {
+        strcat(currstr, digit[currinp]);
+        strcat(currstr, thou[thousands]);
+    }
+    return currstr;
+} 
