@@ -15,7 +15,7 @@ char currstr[1000];
 int main()
 {   
     char nama[50], tipe_penj[3], jenis[3], nom[7], kode_pemb[13];
-    int  nota, banyak, jumlah_baju, jumlah_bayar = 0, total = 0, bayar;
+    int  nota, banyak, jumlah_baju, jumlah_bayar = 0, total = 0, bayar, dupe, length;
     char event;
 
     // Pengulangan sesai pembelian baju
@@ -95,10 +95,23 @@ int main()
     //pembayaran
     printf("%-110s %2.0f%%\n", "Jumlah Diskon", diskon*100);
     printf("%-103s Rp. %6d\n", "Total Belanja Setelah Diskon", harga_diskon);
+
+    //kata-kata untuk harga diskon
+    dupe = harga_diskon;
+    length = 0;
+
+    while (dupe != 0)
+    {
+        dupe /= 10;        
+        length++;
+    }
+
+    printf("%115s\n", convert(harga_diskon, length, 1));
     printf("%-103s Rp. ", "Jumlah bayar"); 
     scanf("%d", &bayar);
     getchar();
     
+    //pemabyaran
     if (harga_diskon > bayar)
     {
         printf ("\nJumlah uang yang dimasukkan tidak mencukupi, harap ulangi proses pembelian dari awal.\n");
@@ -107,15 +120,15 @@ int main()
     {
         printf("%-103s Rp. %6d\n", "Uang kembali", bayar - harga_diskon);
     }
+    int num = bayar-harga_diskon;
 
     //mengubah ke kata-kata
-    int num = bayar-harga_diskon;
-    int dupe = num;
-    int length = 0;
+    dupe = num;
+    length = 0;
 
     while (dupe != 0)
     {
-        dupe /= 10;1;        
+        dupe /= 10;        
         length++;
     }
 

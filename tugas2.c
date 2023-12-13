@@ -21,7 +21,7 @@ int main()
     char binary_arr[n][100], *octal_arr[n][100], *hexa_arr[n][100], *gray_code_arr[n][100];
     for (int i = 0; i < n; i++)
     {
-        printf("[Koversi angka]\n\n");
+        printf("\n[Koversi angka]\n");
         printf("=========================\n");
         printf("Jenis input\n");
         printf("1. Decimal\n2. Binary\n3. Octal\n4. Hexadecimal (dalam kapital)\n5. Gray Code\n");
@@ -35,7 +35,16 @@ int main()
 
         //konversi semua jenis ke desimal
         decimal = anyto_decimal(&inp[0], choice);
-        decimal_arr[i] = decimal;
+        if (decimal != -1)
+        {
+            decimal_arr[i] = decimal;
+        }
+        else
+        {
+            printf("Maaf, pilihan yang dimasukkan salah, mohon coba lagi\n");
+            decimal = 0;
+            decimal_arr[i] = 0;
+        }
 
         //TUGAS
 
@@ -54,30 +63,48 @@ int main()
     }
 
     printf("---------------------------------------------------------------------------------------------------------------------\n");
-    printf("%-25s %-25s %-25s %-25s %-25s\n", "Decimal", "Binary", "Octal", "Hexadecimal", "Gray Code");
+    printf("\033[0;31m%-25s \033[0;32m%-25s \033[0;33m%-25s \033[0;34m%-25s \033[0;35m%-25s\033[1;0m\n", "Decimal", "Binary", "Octal", "Hexadecimal", "Gray Code");
     printf("---------------------------------------------------------------------------------------------------------------------\n");
 
     for (int i = 0; i < n; i++)
     {
-        printf("%-25d %-25s %-25s %-25s %-25s\n", decimal_arr[i], binary_arr[i], octal_arr[i], hexa_arr[i], gray_code_arr[i]);
+        printf("\033[0;31m%-25d \033[0;32m%-25s \033[0;33m%-25s \033[0;34m%-25s \033[0;35m%-25s\033[1;0m\n", decimal_arr[i], binary_arr[i], octal_arr[i], hexa_arr[i], gray_code_arr[i]);
     }
 }
 
 int anyto_decimal (char *inp, int choice)
 {
     int temp = 0, len;
-    char bin[strlen(inp)];
     char check;
     len = strlen(inp);
+    char bin[len];
 
     //cek jenis input
     if (choice == 1)
     {
+        //cek untuk desimal
+        for (int i = 0; i < len; i++)
+        {
+            if (*(inp+i) < '0' || *(inp+i) > '9')
+            {
+                printf("Maaf input yang dimasukkan bukan desimal, mohon coba lagi\n\n");
+                return 0;
+            }
+        }
         temp= atoi(inp);
         return temp;
     }
     else if (choice == 2)
     {
+        for (int i = 0; i < len; i++)
+        {
+            if (*(inp+i) < '0' || *(inp+i) > '1')
+            {
+                printf("Maaf input yang dimasukkan bukan biner, mohon coba lagi\n\n");
+                return 0;
+            }
+        }
+
         for (int i = 0; i < len; i++)
         {
             check = *(inp + i)-48;
@@ -89,6 +116,15 @@ int anyto_decimal (char *inp, int choice)
     {
         for (int i = 0; i < len; i++)
         {
+            if (*(inp+i) < '0' || *(inp+i) > '7')
+            {
+                printf("Maaf input yang dimasukkan bukan oktal, mohon coba lagi\n\n");
+                return 0;
+            }
+        }
+
+        for (int i = 0; i < len; i++)
+        {
             check = *(inp + i)-48;
             temp += check* (int) pow(8, (len-1)-i);
         }
@@ -96,6 +132,15 @@ int anyto_decimal (char *inp, int choice)
     } 
     else if (choice == 4)
     {
+        for (int i = 0; i < len; i++)
+        {
+            if ((*(inp+i) < '0' || *(inp+i) > '9') || (*(inp+i) < 'A' || *(inp+i) > 'F'))
+            {
+                printf("Maaf input yang dimasukkan bukan heksadesimal, mohon coba lagi\n\n");
+                return 0;
+            }
+        }
+
         for (int i = 0; i < len; i++)
         {
             if ( (int)(*(inp + i)) > 57)
@@ -112,6 +157,15 @@ int anyto_decimal (char *inp, int choice)
     }
     else if (choice == 5)
     {
+        for (int i = 0; i < len; i++)
+        {
+        if (*(inp+i) < '0' || *(inp+i) > '1')
+            {
+                printf("Maaf input yang dimasukkan bukan graycode, mohon coba lagi\n\n");
+                return 0;
+            }
+        }
+
         if (*inp == '0') 
         {
             temp = atoi(inp);
@@ -137,6 +191,10 @@ int anyto_decimal (char *inp, int choice)
             temp += check* (int) pow(2, (len-1)-i);
         }
         return temp;
+    }
+    else
+    {
+        return -1;
     }
 }
 
@@ -256,4 +314,3 @@ void decimal_to_hex(int n, char *hexa) {
     }
     *(hexa+i) = '\0';
 }
-//void decimal_to_hexa(int decimal, char hexa) 
